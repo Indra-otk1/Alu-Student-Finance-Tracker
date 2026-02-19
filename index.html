@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Finance Tracker</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/responsive.css">
+</head>
+<body>
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header role="banner">
+        <nav role="navigation" class="navbar">
+            <h1> Student Finance Tracker</h1>
+            <ul class="nav-list">
+                <li><button class="nav-btn" role="tab" data-tab="dashboard" aria-selected="true">Dashboard</button></li>
+                <li><button class="nav-btn" role="tab" data-tab="records">Transactions</button></li>
+                <li><button class="nav-btn" role="tab" data-tab="add">Add</button></li>
+                <li><button class="nav-btn" role="tab" data-tab="settings">Settings</button></li>
+                <li><button class="nav-btn" role="tab" data-tab="about">About</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <div id="messages" role="region" aria-live="polite" aria-label="Messages"></div>
+
+        <!-- Dashboard Tab -->
+        <section id="tab-dashboard" class="tab-content">
+            <h2>Overview</h2>
+            <div id="dashboard-stats"></div>
+        </section>
+
+        <!-- Transactions Tab -->
+        <section id="tab-records" class="tab-content" hidden>
+            <h2>All Transactions</h2>
+            
+            <div class="search-bar" role="search">
+                <label for="search-input">Search transactions (regex enabled):</label>
+                <input 
+                    type="text" 
+                    id="search-input" 
+                    placeholder="e.g., coffee, Food"
+                    aria-label="Search pattern"
+                >
+                <label class="checkbox-label">
+                    <input type="checkbox" id="case-sensitive" aria-label="Case sensitive search">
+                    Case Sensitive
+                </label>
+                <button id="search-clear" class="btn">Clear</button>
+                <div id="search-error" class="error-message" hidden></div>
+            </div>
+
+            <div class="sort-controls">
+                <label for="sort-by">Sort by:</label>
+                <select id="sort-by" aria-label="Sort field">
+                    <option value="date">Date</option>
+                    <option value="description">Description</option>
+                    <option value="amount">Amount</option>
+                </select>
+                <select id="sort-order" aria-label="Sort order">
+                    <option value="desc">Descending</option>
+                    <option value="asc">Ascending</option>
+                </select>
+            </div>
+
+            <table id="records-table" role="grid">
+                <thead>
+                    <tr>
+                        <th scope="col">Description</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+
+        <!-- Add/Edit Form Tab -->
+        <section id="tab-add" class="tab-content" hidden>
+            <h2>Add New Transaction</h2>
+            
+            <form id="transaction-form" novalidate>
+                <div class="form-group">
+                    <label for="input-description">Description <span aria-label="required">*</span></label>
+                    <input 
+                        type="text" 
+                        id="input-description"
+                        placeholder="e.g., Lunch at cafeteria"
+                        required
+                        autocomplete="off"
+                    >
+                    <div data-error="description" class="error-message" hidden></div>
+                    <small>No leading/trailing spaces. No duplicate words.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-amount">Amount ($) <span aria-label="required">*</span></label>
+                    <input 
+                        type="text" 
+                        id="input-amount"
+                        placeholder="0.00"
+                        required
+                        inputmode="decimal"
+                    >
+                    <div data-error="amount" class="error-message" hidden></div>
+                    <small>Valid amounts: 0, 5, 12.50, etc.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-category">Category <span aria-label="required">*</span></label>
+                    <select id="input-category" required>
+                        <option value="">Select a category</option>
+                    </select>
+                    <div data-error="category" class="error-message" hidden></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-date">Date (YYYY-MM-DD) <span aria-label="required">*</span></label>
+                    <input 
+                        type="date" 
+                        id="input-date"
+                        required
+                    >
+                    <div data-error="date" class="error-message" hidden></div>
+                </div>
+
+                <button type="submit" id="form-submit" class="btn btn-primary">Add Transaction</button>
+                <button type="button" id="form-cancel" class="btn">Cancel</button>
+            </form>
+        </section>
+
+        <!-- Settings Tab -->
+        <section id="tab-settings" class="tab-content" hidden>
+            <h2>Settings</h2>
+            
+            <div class="settings-panel">
+                <h3>Currency & Exchange Rates</h3>
+                <div class="form-group">
+                    <label for="base-currency">Base Currency:</label>
+                    <select id="base-currency">
+                        <option value="USD">USD</option>
+                        <option value="EUR">EUR</option>
+                        <option value="GBP">GBP</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="button" id="settings-theme-toggle" class="btn">Toggle Dark Mode</button>
+                </div>
+                
+                <h3>Spending Cap</h3>
+                <div class="form-group">
+                    <label for="spending-cap">Monthly Spending Cap ($):</label>
+                    <input type="number" id="spending-cap" placeholder="e.g., 500" min="0" step="0.01">
+                    <small>Leave empty for no cap</small>
+                </div>
+
+                <h3>Categories</h3>
+                <div id="categories-list"></div>
+                <div class="form-group">
+                    <label for="new-category">Add Category:</label>
+                    <input type="text" id="new-category" placeholder="e.g., Groceries">
+                    <button type="button" id="add-category-btn" class="btn">Add</button>
+                </div>
+
+                <h3>Data Management</h3>
+                <button type="button" id="export-btn" class="btn">Export as JSON</button>
+                <button type="button" id="import-btn" class="btn">Import from JSON</button>
+                <input type="file" id="import-file" accept=".json" hidden>
+                <button type="button" id="clear-btn" class="btn btn-danger">Clear All Data</button>
+            </div>
+        </section>
+
+        <!-- About Tab -->
+        <section id="tab-about" class="tab-content" hidden>
+            <h2>About This App</h2>
+            
+            <div class="about-content">
+                <h3>Purpose</h3>
+                <p>
+                    Student Finance Tracker helps you manage your spending while in school. 
+                    Track transactions, set budgets, and gain insights into your spending habits.
+                </p>
+
+                <h3>Features</h3>
+                <ul>
+                    <li> Dashboard with spending overview</li>
+                    <li> Powerful regex-based search</li>
+                    <li> Auto-save to browser storage</li>
+                    <li> Export/import transactions</li>
+                    <li> Fully responsive design</li>
+                    <li> Accessible keyboard navigation</li>
+                </ul>
+
+                <h3>Contact & Source</h3>
+                <p>
+                    <strong>GitHub:</strong> <a href="https://github.com/Indra-otk1/Alu-Student-Finance-Tracker" target="_blank" rel="noopener noreferrer">github.com/Indra-otk1</a>
+                </p>
+                <p>
+                    <strong>Email:</strong> esingizwa@alustudent.com
+                </p>
+
+                <h3>Regex Examples</h3>
+                <details>
+                    <summary>Click to see search pattern examples</summary>
+                    <ul class="regex-examples">
+                        <li><code>coffee|tea</code> - Find beverages</li>
+                        <li><code>\.\d{2}$</code> - Amounts with cents</li>
+                        <li><code>^Food</code> - Starts with "Food"</li>
+                        <li><code>\b(\w+)\s+\1\b</code> - Duplicate words</li>
+                        <li><code>2025-09</code> - September 2025 transactions</li>
+                    </ul>
+                </details>
+            </div>
+        </section>
+    </main>
+
+    <footer role="contentinfo">
+        <p>&copy; STUDENT FINANCE TRACKER MADE BY INDRA-OTK1 AKA ELVIS</p>
+    </footer>
+
+    <script type="module" src="scripts/main.js"></script>
+</body>
+</html>
