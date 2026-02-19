@@ -1,0 +1,279 @@
+/* responsive.css - Mobile-first responsive design */
+
+/* Mobile-first (base styles in main.css) */
+/* Tablet breakpoint: 768px */
+@media (min-width: 768px) {
+  .navbar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-lg);
+  }
+
+  .navbar h1 {
+    margin-right: var(--spacing-lg);
+    flex-shrink: 0;
+  }
+
+  .nav-list {
+    gap: var(--spacing-md);
+  }
+
+  main {
+    padding: var(--spacing-xl) var(--spacing-lg);
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .search-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+    align-items: end;
+  }
+
+  .search-bar label {
+    grid-column: 1 / -1;
+  }
+
+  .search-bar input[type="text"] {
+    grid-column: 1 / -1;
+    margin-bottom: 0;
+  }
+
+  .checkbox-label {
+    margin-bottom: 0;
+  }
+
+  #search-clear {
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .sort-controls {
+    gap: var(--spacing-lg);
+  }
+
+  .sort-controls label {
+    flex-basis: auto;
+  }
+
+  #records-table {
+    font-size: 0.95rem;
+  }
+
+  #records-table th,
+  #records-table td {
+    padding: var(--spacing-md);
+  }
+
+  .actions-col {
+    width: 120px;
+  }
+
+  #transaction-form {
+    max-width: 700px;
+  }
+
+  .settings-panel {
+    max-width: 700px;
+  }
+
+  .about-content {
+    max-width: 700px;
+  }
+}
+
+/* Desktop breakpoint: 1024px */
+@media (min-width: 1024px) {
+  :root {
+    font-size: 17px;
+  }
+
+  html {
+    font-size: 17px;
+  }
+
+  main {
+    padding: var(--spacing-xl) 0;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .search-bar {
+    grid-template-columns: 2fr 1fr 1fr auto auto;
+    align-items: center;
+  }
+
+  .search-bar label {
+    grid-column: 1;
+  }
+
+  .search-bar input[type="text"] {
+    grid-column: 1;
+    margin-bottom: 0;
+  }
+
+  .checkbox-label {
+    grid-column: 2;
+  }
+
+  #search-error {
+    grid-column: 1 / -1;
+  }
+
+  #search-clear {
+    grid-column: 4;
+    margin-bottom: 0;
+  }
+
+  .sort-controls {
+    margin-bottom: var(--spacing-xl);
+  }
+
+  #records-table {
+    font-size: 0.95rem;
+  }
+
+  #records-table th,
+  #records-table td {
+    padding: var(--spacing-lg) var(--spacing-md);
+  }
+
+  .desc-col {
+    max-width: 300px;
+  }
+
+  #transaction-form {
+    max-width: 600px;
+  }
+
+  .settings-panel {
+    max-width: 600px;
+  }
+
+  .about-content {
+    max-width: 800px;
+  }
+}
+
+/* Extra Large screens: 1440px */
+@media (min-width: 1440px) {
+  main {
+    max-width: 1320px;
+  }
+
+  #records-table {
+    font-size: 1rem;
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Dark mode support (optional) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #1f2937;
+    --color-surface: #111827;
+    --color-border: #374151;
+    --color-text: #f3f4f6;
+    --color-text-light: #d1d5db;
+  }
+
+  .stat-card {
+    background-color: #1f2937;
+  }
+
+  #records-table {
+    background-color: #111827;
+  }
+
+  #records-table tbody tr:hover {
+    background-color: #1f2937;
+  }
+
+  .search-bar,
+  #transaction-form,
+  .settings-panel {
+    background-color: #111827;
+  }
+
+  .navbar {
+    background-color: #111827;
+  }
+
+  mark {
+    background-color: #854d0e;
+    color: #fef3c7;
+  }
+
+  .message-success {
+    background-color: #064e3b;
+    color: #86efac;
+  }
+
+  .message-error {
+    background-color: #7f1d1d;
+    color: #fca5a5;
+  }
+
+  .message-info {
+    background-color: #0c2340;
+    color: var(--color-primary);
+  }
+
+  .contact-link {
+    color: var(--color-primary);
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: more) {
+  :root {
+    --color-primary: #660099;
+    --color-danger: #cc0000;
+    --color-success: #008000;
+  }
+
+  button,
+  input,
+  select {
+    border-width: 2px;
+  }
+}
+
+/* Print styles */
+@media print {
+  header,
+  footer,
+  .nav-list,
+  .search-bar,
+  .sort-controls,
+  #transaction-form,
+  .settings-panel {
+    display: none;
+  }
+
+  body {
+    background: white;
+    color: black;
+  }
+
+  #records-table {
+    box-shadow: none;
+    page-break-inside: avoid;
+  }
+}
