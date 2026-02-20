@@ -203,6 +203,32 @@ function attachEventListeners() {
   // Table edit/delete buttons
   attachTableEventListeners();
 
+  // Delegated click handler for records table to support dynamic rows
+  const recordsTable = document.getElementById('records-table');
+  if (recordsTable) {
+    recordsTable.addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      const row = btn.closest('.record-row');
+      const id = row?.dataset.id;
+
+      if (btn.classList.contains('btn-edit')) {
+        const state = getState();
+        const record = state.records.find(r => r.id === id);
+        if (record) {
+          ui.setFormData(record);
+          ui.showTab('add');
+        }
+        return;
+      }
+
+      if (btn.classList.contains('btn-delete')) {
+        ui.handleDeleteRecord(id);
+        return;
+      }
+    });
+  }
+
   // Settings
   const exportBtn = document.getElementById('export-btn');
   const importBtn = document.getElementById('import-btn');

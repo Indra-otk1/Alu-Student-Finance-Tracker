@@ -89,7 +89,7 @@ Shows total spent, last 7 days balance, top category, and transaction count.
 
 ## Deployment
 
-Push to GitHub, enable Pages from Settings, select main branch. Live at `https://your-username.github.io/student-finance-tracker/`
+Push to GitHub, enable Pages from Settings, select main branch. Live at `https://indra-otk1.github.io/Alu-Student-Finance-Tracker/`
 
 ## Contact
 
