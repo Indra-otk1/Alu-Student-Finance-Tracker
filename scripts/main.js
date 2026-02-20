@@ -1,6 +1,6 @@
 // main.js - Application entry point and event handling
 
-import { initializeState, getState, setUI, setFilter } from './state.js';
+import { initializeState, getState, setUI, setFilter, updateRecords } from './state.js';
 import * as ui from './ui.js';
 import { loadSettings, saveSettings, exportJSON, validateImportData } from './storage.js';
 import { compileRegex, searchRecords, highlightRecord } from './search.js';
@@ -247,7 +247,7 @@ function attachEventListeners() {
             });
           });
           
-          ui.updateRecords(state.records);
+          updateRecords(state.records);
           ui.renderRecordsTable();
           ui.renderDashboard();
           ui.showMessage(`Imported ${data.length} records successfully!`, 'success');
@@ -265,11 +265,22 @@ function attachEventListeners() {
   if (clearBtn) {
     clearBtn.addEventListener('click', () => {
       if (confirm('Are you sure? This will delete ALL transactions permanently.')) {
-        ui.updateRecords([]);
+        updateRecords([]);
         ui.renderRecordsTable();
         ui.renderDashboard();
         ui.showMessage('All data cleared.', 'info');
       }
+    });
+  }
+
+  // Theme toggle
+  const themeToggleBtn = document.getElementById('settings-theme-toggle');
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const newTheme = current === 'light' ? 'dark' : 'light';
+      applyTheme(newTheme);
+      ui.showMessage(`Switched to ${newTheme} mode`, 'info');
     });
   }
 
