@@ -98,4 +98,4 @@ Push to GitHub, enable Pages from Settings, select main branch. Live at `https:/
 
 ## Demo
 
-[Link to demo video](https://youtube.com) - Shows keyboard navigation, regex search, and import/export.
+[Link to demo video](https://youtu.be/VM47MI-3qXI) - Shows keyboard navigation, regex search, and import/export.
